@@ -1,0 +1,92 @@
+{
+    "[cpp]": {
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true,
+        "editor.renderIndentGuides": true,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": true,
+        "editor.tabSize": 4,
+        "editor.guides.indentation": true
+    },
+    "[c]":{
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true,
+        "editor.renderIndentGuides": true,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": true,
+        "editor.tabSize": 4,
+        "editor.guides.indentation": true
+    },
+    "clang.executable" : "C:\\LLVM\\bin\\clang.exe",
+    "clang.cxxflags": [
+        "-std=c++17", // <-c++程式改這裡
+        "-IC:\\MinGW\\include",
+        "-IC:\\MinGW\\lib\\gcc\\mingw32\\6.3.0\\include",
+        "-IC:\\MinGW\\lib\\gcc\\mingw32\\6.3.0\\include\\c++",
+        "-I${workspaceRoot}\\include",
+        "-I${cwd}"
+    ],
+    "clang.cflags":[
+        "-std=c11", // <-c程式改這裡
+        "-IC:\\MinGW\\include",
+        "-IC:\\MinGW\\lib\\gcc\\mingw32\\6.3.0\\include",
+        "-I${workspaceRoot}\\include",
+        "-I${cwd}"
+    ],
+    "files.associations": {
+        "iostream": "cpp",
+        "stdio.h": "c",
+        "atomic": "cpp",
+        "bit": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "cstddef": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp",
+        "exception": "cpp",
+        "fstream": "cpp",
+        "initializer_list": "cpp",
+        "ios": "cpp",
+        "iosfwd": "cpp",
+        "istream": "cpp",
+        "iterator": "cpp",
+        "limits": "cpp",
+        "map": "cpp",
+        "memory": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "streambuf": "cpp",
+        "string": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "utility": "cpp",
+        "vector": "cpp",
+        "xfacet": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xstring": "cpp",
+        "xtr1common": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
+    },
+    "code-runner.runInTerminal": true,
+    "code-runner.executorMap":{
+        "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt -std=c11 && $dir$fileNameWithoutExt", // <-c程式改這裡
+        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt -std=c++17 && $dir$fileNameWithoutExt", // <-c++程式改這裡
+    }
+}
