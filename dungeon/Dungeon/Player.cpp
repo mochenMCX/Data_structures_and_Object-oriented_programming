@@ -15,21 +15,31 @@
 
 Player::Player()
 {
-    gamecharacter = {knight(), gambler(), bad_guy()};
+    gamecharacter = {knight() , gambler() , bad_guy()};
+    //sword* tem = new sword(1);
+    weapon = {NULL, NULL, NULL};
         ch.insert(make_pair("knight", true));
         ch.insert(make_pair("gambler", false));
         ch.insert(make_pair("8+9", false));
+
 }
 
-void Player::eraseItem(Item a)
+void Player::eraseItem(Item &a)
 {
-    for(auto i = inventory.begin();i != inventory.end();++i){
-            if(i -> getTag() == a.getTag()){
-                inventory.erase(i);
-                break;
-            }
+    vector<Item>::iterator it;
+    vector<Item> b = this->getInventory();
+    for (it=b.begin(); it!=b.end(); it++) {
+        if (it->getName() == a.getName()) {
+            b.erase(it);
+            this->setInventory(b);
+            break;
         }
+    }
 }
+
+/*bool Player::is_buff_on_time(){
+    return true;
+}*/
 
 void Player::addItem(Item a)
 {
@@ -99,11 +109,10 @@ void Player::setPreviousRoom(Room *a)
     previousRoom = a;
 }
 
-void Player::setInventory(vector<Item> a)
-{
-    for (int i = 0; i < a.size(); i++) {
-            inventory[i] = a[i];
-        }
+void Player::setInventory(vector<Item> &a)
+{   
+    //inventory.resize(a.size());
+    inventory = a;
 }
 
 Room *Player::getCurrentRoom()
@@ -127,10 +136,20 @@ void Player::unlock_character(string a)
 }
 
 int Player::getmoney()
-{
+{ 
     vector<Item>::iterator it;
         vector<Item> b = getInventory();
-        for(it = b.begin();it->getTag()!= "money";++it);
+        if (b.size() == 0) {
+            return 0;
+        }
+        for (it = b.begin(); it->getTag() != "money" && it != b.end(); ++it) {
+            if (it->getTag() != "money" && it + 1 == b.end()) {
+                break;
+            }
+        };
+        if (it->getTag() != "money" && it + 1 == b.end()) {
+            return 0;
+        }
         if(it == b.end()) return 0;
         else{
             return it->getamount();

@@ -5,12 +5,16 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Item.h"
+
 #include "GameCharacter.h"
-#include "Player.h"
+// #include "Player.h"
 #include "Item.h"
 
 using namespace std;
+
+class Item;
+class GameCharacter;
+
 
 class NPC: public GameCharacter
 {
@@ -23,25 +27,23 @@ public:
 
     /* Virtual function that you need to complete   */
     /* In NPC, this function should deal with the   */
-    /* transaction in easy implementation 
+    /* transaction in easy implementation
               */
-    virtual bool triggerEvent(Object* a)=0;
+    virtual bool triggerEvent(Object* a);
     virtual int get_weapon_attack()final;
     virtual bool is_buff_on_time()final;
-    virtual int get_weapon_defense()final;
-    virtual bool passive_check()final;
-    virtual void passive_skill()final;
-    virtual int active_skill()final;
-    virtual bool is_weapon_on()final;
-    virtual void put_on_weapon(Item a)final;
-    virtual void turn_passive_chance()final;
-    virtual string getweaponname()final;
+    //virtual int get_weapon_defense()final;
+    //virtual bool passive_check()final;
+    //virtual int active_skill()final;
+    //virtual bool is_weapon_on()final;
+    //virtual void put_on_weapon(Item a)final;
+    //virtual string getweaponname()final;
     /* Set & Get function*/
     void setScript(string a);
     void setCommodity(vector<Item> a);
     string getScript();
     vector<Item> getCommodity();
-};//merchant for med, merchant for fight_med, father for heal, 
+};//merchant for med, merchant for fight_med, father for heal,
 
 
 class merchant_med :public NPC

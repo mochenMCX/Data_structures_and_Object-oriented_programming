@@ -6,12 +6,19 @@
 #include <vector>
 #include <map>
 #include "GameCharacter.h"
-#include "Room.h"
+
 #include "Item.h"
+#include "Room.h"
+// #include "Monster.h"
+// #include "NPC.h"
+
 
 using namespace std;
 
 class Item;
+class GameCharacter;
+class Room;
+
 
 class Player: public GameCharacter
 {
@@ -22,10 +29,11 @@ private:
 public:
     map<string, bool> ch;
     vector<GameCharacter> gamecharacter;
-    virtual bool is_buff_on_time(){};
+    vector<Item*> weapon;
+   // virtual bool is_buff_on_time();
     Player();
     Player(string a){};
-    void eraseItem(Item a);
+    void eraseItem(Item &a);
     void addItem(Item a);
     //void increaseStates(int,int,int);
     void changeRoom(Room* a);
@@ -48,7 +56,7 @@ public:
     /* Set & Get function*/
     void setCurrentRoom(Room* a);
     void setPreviousRoom(Room* a);
-    void setInventory(vector<Item> a);
+    void setInventory(vector<Item> &a);
     // void setGameacter(){
     //     knight;
     // };

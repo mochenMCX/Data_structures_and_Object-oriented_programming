@@ -1,16 +1,41 @@
 #include "GameCharacter.h"
 
-GameCharacter::GameCharacter(string a) :Object(a) 
+GameCharacter::GameCharacter()
 {
+    timer = 0;
+    buff_timer = 0;
+    buff_attack = 0;
+    buff_defense = 0;
+    maxHealth = 0;
+    currentHealth = 0;
+    attack = 0;
+    defense = 0;
+}
+
+GameCharacter::GameCharacter(string a) : Object(a)
+{
+    timer = 0;
+    buff_timer = 0;
+    buff_attack = 0;
+    buff_defense = 0;
+    maxHealth = 0;
+    currentHealth = 0;
+    attack = 0;
+    defense = 0;
+
 }
 
 GameCharacter::GameCharacter(string a, string f, int b, int c, int d, int e):Object(a, f), maxHealth(b), currentHealth(c), attack(d), defense(e) 
 {
+    timer = 0;
+    buff_timer = 0;
+    buff_attack = 0;
+    buff_defense = 0;
 }
 
 int GameCharacter::gettimer()
 {
-   return timer+1;
+   return timer;
 }
 
 void GameCharacter::settimer(int a)
@@ -20,7 +45,7 @@ void GameCharacter::settimer(int a)
 
 void GameCharacter::subtimer()
 {
-    if(timer != 0){
+    if(timer > 0){
             timer--;
         }
 }
@@ -35,6 +60,17 @@ bool GameCharacter::isontimer()
         }
 }
 
+bool GameCharacter::is_buff_on_time()
+{   
+    if (getbuff_timer() != 0) {
+        return false;
+    }
+    else {
+        return true;
+    }
+    
+}
+
 void GameCharacter::setbuff_timer(int a)
 {
     buff_timer = a;
@@ -42,7 +78,7 @@ void GameCharacter::setbuff_timer(int a)
 
 void GameCharacter::subbuff_timer()
 {
-    if(buff_timer != 0){
+    if(buff_timer > 0){
             buff_timer--;
         }
 }
@@ -75,6 +111,25 @@ int GameCharacter::getbuff_defense()
 bool GameCharacter::checkIsDead()
 {
     return currentHealth == 0;
+}
+
+bool GameCharacter::passive_check()
+{
+    if (this->getName() == "knight") {
+        if (this->getCurrentHealth() <= 0 && passive_chance) {
+            return true;
+        }
+        else return false;
+    }
+    if (this->getName() == "gambler" || this->getName()=="8+9") {
+        return true;
+    }
+    return false;
+}
+
+bool GameCharacter::triggerEvent(Object *a)
+{
+    return false;
 }
 
 int GameCharacter::takeDamage(int n)
@@ -116,6 +171,11 @@ int GameCharacter::getCurrentHealth()
 
 int GameCharacter::getAttack()
 {
+    if (getName() == "gambler") {
+        srand((unsigned)time(NULL));
+        int num = rand() % 5 + 3;
+        return num;
+    }
     return (attack + buff_attack);
 }
 
@@ -124,7 +184,96 @@ int GameCharacter::getDefense()
     return (defense + buff_defense);
 }
 
-knight::knight() :GameCharacter("knight", "gamecharacter", 10, 10, 3, 3) 
+void GameCharacter::passive_skill()
+{
+    if (this->getName() == "knight") {
+        if (getCurrentHealth() == 0) {
+            cout << "trigger the passive skill!! : immune death once!" << endl;
+            setCurrentHealth(1);
+            passive_chance = false;
+        }
+    }
+    if (this->getName() == "gambler") {
+        setbuff_timer(10);
+        srand((unsigned)time(NULL));
+        int num = rand() % 5;
+        if (num == 0) {
+            cout << "trigger the passive skill!! : immune next damage!" << endl;
+            setbuff_defense(10000);
+        }
+        else {
+            setbuff_defense(0);
+        }
+    }
+    if (this->getName() == "8+9") {
+        if (getCurrentHealth() < 5) {
+            setbuff_timer(10);
+            cout << "trigger the passive skill! : increase the defense and attack!" << endl;
+            setbuff_defense(3);
+            setbuff_attack(3);
+        }
+        else {
+            setbuff_defense(0);
+            setbuff_attack(0);
+        }
+    }
+}
+
+int GameCharacter::active_skill()
+{
+    if (this->getName() == "knight") {
+        cout << "use skill!  defense double!" << endl;
+        int a = getDefense();
+        setbuff_defense(a);
+        setbuff_timer(2);
+        settimer(3);
+        return getAttack();
+    }
+    if (this->getName() == "gambler") {
+        cout << "use skill!   recover the health" << endl;
+        settimer(5);
+        int a = getCurrentHealth() + 5;
+        setCurrentHealth(a);
+        if (getCurrentHealth() > 7) setCurrentHealth(7);
+        return getAttack();
+    }
+    if (this->getName() == "8+9") {
+        cout << "use skill!   more damage hit!" << endl;
+        settimer(2);
+        return getAttack() * 2;
+    }
+    return 0;
+}
+
+bool GameCharacter::is_weapon_on()
+{
+    return false;
+}
+
+/*string GameCharacter::getweaponname()
+{
+    return weapon->getName();
+}*/
+
+void GameCharacter::turn_passive_chance()
+{
+}
+
+int GameCharacter::get_weapon_attack()
+{
+    return 0;
+}
+
+int GameCharacter::get_weapon_defense()
+{
+    return 0;
+}
+
+// void GameCharacter::put_on_weapon(Item* a)
+// {
+// }
+
+knight::knight() :GameCharacter("knight", "gamecharacter", 15, 15, 4, 3) 
 {
     bool passive_chance = true;
         weapon = NULL;
@@ -160,10 +309,9 @@ void knight::turn_passive_chance()
 bool knight::is_buff_on_time()
 {
     if(getbuff_timer()!= 0){
-            subbuff_timer();
             return false;
-        }
-        else{
+    }
+    else{
             return true;
         }
 }
@@ -181,7 +329,7 @@ void knight::passive_skill()
     if(getCurrentHealth() == 0){
             setCurrentHealth(1);
             passive_chance = false;
-        }
+    }
 }
 
 bool knight::passive_check()
@@ -192,10 +340,10 @@ bool knight::passive_check()
         else return false;
 }
 
-void knight::put_on_weapon(Item a)
-{
-    this->weapon = &a;
-}
+// void knight::put_on_weapon(Item* a)
+// {
+//     this -> weapon = a;
+// }
 
 bool knight::is_weapon_on()
 {
@@ -208,7 +356,7 @@ bool knight::triggerEvent(Object *a)
         return false;
 }
 
-string knight::getweaponname()
+/*string knight::getweaponname()
 {
         if(is_weapon_on()){
             return weapon->getName();
@@ -216,18 +364,16 @@ string knight::getweaponname()
         else{
             return "No put on weapon.";
         }
-}
+}*/
 
-gambler::gambler() : GameCharacter("gambler", "gamecharacter", 7, 7, 1, 2)
+gambler::gambler() : GameCharacter("gambler", "gamecharacter", 10, 10, 3, 2)
 {
     weapon = NULL;
         setbuff_attack(0);
         setbuff_defense(0);
 }
 
-void gambler::turn_passive_chance()
-{
-}
+
 
 int gambler::get_weapon_defense()
 {
@@ -242,7 +388,7 @@ int gambler::get_weapon_attack()
 int gambler::getAttack()
 {
         srand((unsigned)time(NULL));
-        int num = rand()%10 + 1;
+        int num = rand()%10 + 3;
         return num;
 }
 
@@ -262,21 +408,21 @@ int gambler::active_skill()
         settimer(5);
         int a = getCurrentHealth() + 5;
         setCurrentHealth(a);
-        if (getCurrentHealth() > 7) setCurrentHealth(7);
+        if (getCurrentHealth() > 10) setCurrentHealth(10);
         return getAttack();
 }
 
 void gambler::passive_skill()
 {
     setbuff_timer(10);
-        srand((unsigned)time(NULL));
-        int num = rand() % 5;
-        if(num == 0){
-            setbuff_defense(1000);
-        }
-        else{
-            setbuff_defense(0);
-        }
+    srand((unsigned)time(NULL));
+    int num = rand() % 5;
+    if(num == 0){
+       setbuff_defense(1000);
+    }
+    else{
+       setbuff_defense(0);
+    }
 }
 
 bool gambler::passive_check()
@@ -284,10 +430,10 @@ bool gambler::passive_check()
         return true;
 }
 
-void gambler::put_on_weapon(Item a)
-{
-    this->weapon = &a;
-}
+// void gambler::put_on_weapon(Item* a)
+// {
+//     this->weapon = a;
+// }
 
 bool gambler::triggerEvent(Object *a)
 {
@@ -300,7 +446,7 @@ bool gambler::is_weapon_on()
         else return true;
 }
 
-string gambler::getweaponname()
+/*string gambler::getweaponname()
 {
         if(is_weapon_on()){
             return weapon->getName();
@@ -308,18 +454,15 @@ string gambler::getweaponname()
         else{
             return "No put on weapon.";
         }
-}
+}*/
 
-bad_guy::bad_guy():GameCharacter("8+9", "gamecharacter", 8, 8, 5, 2)
+bad_guy::bad_guy():GameCharacter("8+9", "gamecharacter", 12, 12, 5, 2)
 {
     weapon = NULL;
     setbuff_attack(0);
     setbuff_defense(0);
 }
 
-void bad_guy::turn_passive_chance()
-{
-}
 
 int bad_guy::get_weapon_defense()
 {
@@ -352,7 +495,7 @@ void bad_guy::passive_skill()
     if(getCurrentHealth()<5){
             setbuff_defense(3);
             setbuff_attack(3);
-        }
+    }
 }
 
 bool bad_guy::passive_check()
@@ -371,12 +514,12 @@ bool bad_guy::is_weapon_on()
         else return true;
 }
 
-void bad_guy::put_on_weapon(Item a)
-{
-    this->weapon = &a;
-}
+// void bad_guy::put_on_weapon(Item* a)
+// {
+//     this->weapon = a;
+// }
 
-string bad_guy::getweaponname()
+/*string bad_guy::getweaponname()
 {
     if(is_weapon_on()){
             return weapon->getName();
@@ -384,4 +527,4 @@ string bad_guy::getweaponname()
         else{
             return "No put on weapon.";
         }
-}
+}*/

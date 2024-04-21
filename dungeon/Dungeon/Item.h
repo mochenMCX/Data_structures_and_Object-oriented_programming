@@ -7,10 +7,16 @@
 #include<sstream>
 #include <map>
 #include "Object.h"
-#include "Player.h"
+// #include "Player.h"
+// #include "GameCharacter.h"
+// #include "Monster.h"
+// #include "NPC.h"
+// #include "Room.h"
+
 using namespace std;
 
-class Player;
+
+
 
 class Item: public Object
 {
@@ -20,7 +26,7 @@ private:
     int amount;
 public:
     Item();
-    Item(string a, string b, int c, int d, int e);
+    //Item(string a, string b, int c, int d, int e);
 
     /* Virtual function that you need to complete    */
     /* In Item, this function should deal with the   */
@@ -39,7 +45,7 @@ public:
     void setDefense(int a);
     void addamount(int a);
     void setamount(int a);
-    int getamount();
+    virtual int getamount()final;
 };
 
 class med :public Item
@@ -60,21 +66,19 @@ class sword :public Item
 {
 public:
     sword(int a);
-    virtual bool triggerEvent(Object* a);
+    //virtual bool triggerEvent(Object* a);
 };
 
 class dice :public Item
 {
 public:
     dice(int a);
-    virtual bool triggerEvent(Object* a);
 };
 
 class winebottle:public Item
 {
 public:
     winebottle(int a);
-    virtual bool triggerEvent(Object* a);
 };
 
 class money:public Item

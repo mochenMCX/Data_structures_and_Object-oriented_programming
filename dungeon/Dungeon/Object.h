@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 
+
 using namespace std;
 
 class Object
@@ -19,13 +20,14 @@ public:
     Object(string a, string b) ;
 
     /* pure virtual function */
-    virtual bool triggerEvent(Object* a) = 0;
+    virtual bool triggerEvent(Object* a);
 
     /* Set & Get function*/
     void setName(string a);
     void setTag(string a);
     string getName();
     string getTag();
+    virtual int getamount();
 };
 
 

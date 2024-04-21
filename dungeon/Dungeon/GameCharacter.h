@@ -4,12 +4,14 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <stdlib.h>
+#include<stdlib.h>
 #include <time.h>
 #include "Object.h"
 #include "Item.h"
-
 using namespace std;
+
+class Item;
+
 
 class GameCharacter: public Object
 {
@@ -23,6 +25,8 @@ private:
     int attack;
     int defense;
 public:
+    Item* weapon;
+    bool passive_chance;
     GameCharacter();
     GameCharacter(string a);
     GameCharacter(string a, string f, int b, int c, int d, int e);
@@ -30,7 +34,7 @@ public:
     void settimer(int a);
     void subtimer();
     bool isontimer();//show have to +1
-    virtual bool is_buff_on_time()=0;
+    virtual bool is_buff_on_time();
     void setbuff_timer(int a);
     void subbuff_timer();
     int getbuff_timer();
@@ -39,8 +43,8 @@ public:
     int getbuff_attack();
     int getbuff_defense();
     bool checkIsDead();
-    virtual bool passive_check()=0;
-    virtual bool triggerEvent(Object* a)=0;
+    virtual bool passive_check();
+    virtual bool triggerEvent(Object* a);
     int takeDamage(int n);
 
     /* Set & Get function*/
@@ -52,46 +56,41 @@ public:
     int getCurrentHealth();
     virtual int getAttack();
     int getDefense();
-    virtual void put_on_weapon(Item)=0;
-    virtual void passive_skill()=0;
-    virtual int active_skill()=0;
-    virtual bool is_weapon_on()=0;
-    virtual string getweaponname()=0;
-    virtual void turn_passive_chance()=0;
-    virtual int get_weapon_attack()=0;
-    virtual int get_weapon_defense()=0;
+    //virtual void put_on_weapon(Item* a);
+    //temporary not pure virtual
+    virtual void passive_skill();
+    virtual int active_skill();
+    virtual bool is_weapon_on();
+    //virtual string getweaponname();
+    virtual void turn_passive_chance();
+    virtual int get_weapon_attack();
+    virtual int get_weapon_defense();
 };
 
 
 
 class knight :public GameCharacter
 {
-private:
-    bool passive_chance;
-    Item* weapon;
 public:
     knight();
     virtual int get_weapon_defense();
     virtual int get_weapon_attack();
     virtual void turn_passive_chance();
     virtual bool is_buff_on_time();
-    virtual int active_skill();
+    virtual int active_skill()override;
     virtual void passive_skill();
     virtual bool passive_check();
-    virtual void put_on_weapon(Item a);
+    //virtual void put_on_weapon(Item* a);
     virtual bool is_weapon_on();
     virtual bool triggerEvent(Object* a);//not yet
 
-    virtual string getweaponname();
+    //virtual string getweaponname();
 };
 
 class gambler :public GameCharacter
 {
-private:
-    Item* weapon;
 public:
     gambler();
-    virtual void turn_passive_chance();
     virtual int get_weapon_defense();
     virtual int get_weapon_attack();
     virtual int getAttack();
@@ -99,19 +98,16 @@ public:
     virtual int active_skill();
     virtual void passive_skill();
     virtual bool passive_check();
-    virtual void put_on_weapon(Item a);
+    //virtual void put_on_weapon(Item* a);
     virtual bool triggerEvent(Object* a);//not yet
 
     virtual bool is_weapon_on();
-    virtual string getweaponname();
+    //virtual string getweaponname();
 };
 class bad_guy :public GameCharacter
 {
-private:
-    Item* weapon;
 public:
     bad_guy();
-    virtual void turn_passive_chance();
     virtual int get_weapon_defense();
     virtual int get_weapon_attack();
     virtual bool is_buff_on_time();
@@ -122,8 +118,10 @@ public:
 
     virtual bool is_weapon_on();
 
-    virtual void put_on_weapon(Item a);
+    //virtual void put_on_weapon(Item* a);
 
-    virtual string getweaponname();
+    //virtual string getweaponname();
 };
+
+
 #endif // GAMECHARACTER_H_INCLUDED

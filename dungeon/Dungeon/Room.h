@@ -5,12 +5,18 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Object.h"
 #include "GameCharacter.h"
 #include "Monster.h"
 #include "NPC.h"
+#include "Object.h"
+#include "Player.h"
+#include "Item.h"
 
 using namespace std;
+
+class Object;
+class Player;
+class Monster;
 
 class Room
 {
@@ -29,7 +35,7 @@ public:
     Room();
     Room(int b);
     bool popObject(Object* a);; /*pop out the specific object, used when the interaction is done*/
-
+    void addItem(Object* a);
     /* Set & Get function*/
     bool getlock();
     void unlock();
@@ -51,7 +57,7 @@ public:
     Room* getRightRoom();
     Room* getupstairs();
     Room* getdownstairs();
-    bool islock(Player a);
+    bool islock(Player &a);
 };
 
 class restaurant:public Room
@@ -76,7 +82,7 @@ class center:public Room
 {
 public:
     center(int a);
-    
+
 };
 
 class store:public Room

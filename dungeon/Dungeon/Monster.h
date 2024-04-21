@@ -5,28 +5,33 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Item.h"
+// #include "Item.h"
 #include "GameCharacter.h"
 #include "Player.h"
+// #include "Room.h"
+
 
 using namespace std;
 
+class Object;
+class GameCharacter;
+class Player;
+
 class Monster: public GameCharacter
 {
-private:
 public:
     Monster();
     Monster(string a,int b,int c,int d);
-    virtual int get_weapon_attack()final;
+    //virtual int get_weapon_attack()final;
     virtual bool is_buff_on_time()final;
-    virtual int get_weapon_defense()final;
-    virtual bool passive_check()final;
-    virtual void passive_skill()final;
+    //virtual int get_weapon_defense()final;
+    //virtual bool passive_check()final;
+    //virtual void passive_skill()final;
     virtual int active_skill()=0;
-    virtual void put_on_weapon(Item a)final;
+    //virtual void put_on_weapon(Item* a)final;
     virtual bool is_weapon_on()final;
-    virtual string getweaponname()final;
-    virtual void turn_passive_chance()final;
+    //virtual string getweaponname()final;
+    //virtual void turn_passive_chance()final;
     /* Virtual function that you need to complete   */
     /* In Monster, this function should deal with   */
     /* the combat system.                           */

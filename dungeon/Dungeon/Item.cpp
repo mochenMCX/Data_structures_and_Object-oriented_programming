@@ -1,15 +1,18 @@
 #include "Item.h"
+#include "GameCharacter.h"
+#include "Player.h"
+
 
 Item::Item()
 {
 }
 
-Item::Item(string a, string b, int c, int d, int e)
-{
-    health = c;
-    attack = d;
-    defense = e;
-}
+// Item::Item(string a, string b, int c, int d, int e)
+// {
+//     health = c;
+//     attack = d;
+//     defense = e;
+// }
 
 bool Item::triggerEvent(Object* a)
 {
@@ -77,58 +80,87 @@ med::med(int a)
         setHealth(a);
         setamount(1);
         stringstream ss;
-        ss << "medicine for "<<a;
-        string str;
-        ss >> str;
+        ss << a;
+        string tem;
+        ss >> tem;
+        string str = "medicine for +" + tem;
         setName(str);
         if(a == 3) setdollar(30);
         if(a == 5) setdollar(40);
         if(a == 7) setdollar(50);
 }
 
-bool med::triggerEvent(Object *a)
+bool med::triggerEvent(Object *a)//have amount problem
 {
         Player* x = dynamic_cast<Player*>(a);
         vector<Item>::iterator it;
         vector<Item> b = x->getInventory();
-        if(getName() == "medicine for 3"){
-            for(it = b.begin();it->getName() != "medicine for 3";it++){};
-            if(it == b.end()){
-                x->addItem(med(3));
+        if(getName() == "medicine for +3"){
+            if (b.size() == 0) {
+                med m = med(3);
+                x->addItem(m);
+                return true;
             }
-            else{
-                it->addamount(1);
-                x->setInventory(b);
-            }
+            for(it = b.begin();it->getName() != "medicine for +3" && it!=b.end();it++){
+                if (it + 1 == b.end() && it->getName() != "medicine for +3") {
+                    med m = med(3);
+                    x->addItem(m);
+                    return true;
+                }
+                else if (it + 1 == b.end()) {
+                    break;
+                }
+            };
+            it->addamount(this->getamount());
+            x->setInventory(b);
         }
-        else if(getName() == "medicine for 5"){
-            for(it = b.begin();it->getName() != "medicine for 5";it++){};
-            if(it == b.end()){
-                x->addItem(med(5));
+        else if(getName() == "medicine for +5"){
+            if (b.size() == 0) {
+                med m = med(5);
+                x->addItem(m);
+                return true;
             }
-            else{
-                int am = getamount();
-                it->addamount(am);
-                x->setInventory(b);
-            }
+            for(it = b.begin();it->getName() != "medicine for +5" && it!=b.end();it++){
+                if (it + 1 == b.end() && it->getName() != "medicine for +5") {
+                    med m = med(5);
+                    x->addItem(m);
+                    return true;
+                }
+                else if (it + 1 == b.end()) {
+                    break;
+                }
+            };
+            int am = getamount();
+            it->addamount(am);
+            x->setInventory(b);
         }
-        else if(getName() == "medicine for 7"){
-            for(it = b.begin();it->getName() != "medicine for 7";it++){};
-            if(it == b.end()){
-                x->addItem(med(7));
+        else if(getName() == "medicine for +7"){
+            if (b.size() == 0) {
+                med m = med(7);
+                x->addItem(m);
+                return true;
             }
-            else{
-                it->addamount(1);
-                x->setInventory(b);
-            }
+            for(it = b.begin();it->getName() != "medicine for +7" &&it!=b.end();it++){
+                if (it + 1 == b.end() && it->getName() != "medicine for +7") {
+                    med m = med(7);
+                    x->addItem(m);
+                    return true;
+                }
+                else if (it + 1 == b.end()) {
+                    break;
+                }
+            };
+            it->addamount(this->getamount());
+            x->setInventory(b);
         }
         return true;
 }
 
 key::key()
 {
+    setName("key");
     setTag("key");
-        setamount(1);
+    setamount(1);
 }
 
 bool key::triggerEvent(Object *a)
@@ -144,14 +176,14 @@ sword::sword(int a)
         if (a == 1) {
             setName("normal sword");
             setTag("sword");
-            setDefense(0);
+            setDefense(1);
             setHealth(0);
             setdollar(60);
         }
         if (a == 3) {
             setName("good sword");
             setTag("sword");
-            setDefense(1);
+            setDefense(2);
             setHealth(0);
             setdollar(100);
         }
@@ -164,13 +196,11 @@ sword::sword(int a)
         }
 }
 
-bool sword::triggerEvent(Object *a)
+/*bool sword::triggerEvent(Object *a)
 {
-        Player* x = dynamic_cast<Player*>(a);
-        Item* tem = this;
-        x->gamecharacter[0].put_on_weapon(*tem);
-        return true;
-}
+    Player* x = dynamic_cast<Player*>(a);
+    return true;
+}*/
 
 dice::dice(int a)
 {
@@ -196,13 +226,7 @@ dice::dice(int a)
         }
 }
 
-bool dice::triggerEvent(Object *a)
-{
-        Player* x = dynamic_cast<Player*>(a);
-        Item* tem = this;
-        x->gamecharacter[1].put_on_weapon(*tem);
-        return true;
-}
+
 
 winebottle::winebottle(int a)
 {
@@ -228,14 +252,6 @@ winebottle::winebottle(int a)
         }
 }
 
-bool winebottle::triggerEvent(Object *a)
-{
-        Player* x = dynamic_cast<Player*>(a);
-        Item* tem = this;
-        x->gamecharacter[2].put_on_weapon(*tem);
-        return true;
-}
-
 money::money(int a)
 {
     setamount(a);
@@ -248,16 +264,36 @@ bool money::triggerEvent(Object *a)
         Player* x = dynamic_cast<Player*>(a);
         vector<Item>::iterator it;
         vector<Item> b = x->getInventory();
-        for(it = b.begin();it->getName() != "money";it++){};
-            if(it == b.end()){
-                Item* tem = this;
-                x->addItem(*tem);
+        if (b.size() == 0) {
+            int num = this->getamount();
+            money mon = money(num);
+            x->addItem(mon);
+            return true;
+        }
+        for(it = b.begin();it->getName() != "money" && it!=b.end();it++){
+            if (it + 1 == b.end() && it->getName() != "money") {
+                int num = this->getamount();
+                money mon = money(num);
+                x->addItem(mon);
+                return true;
+            }
+            else if (it + 1 == b.end()) {
+                break;
+            }
+        };
+        int am = this->getamount();
+        it->addamount(am);
+        x->setInventory(b);
+            /*if (it == b.end()) {
+                int num = this->getamount();
+                money mon = money(num);
+                x->addItem(mon);
             }
             else{
                 int am = this->getamount();
                 it->addamount(am);
                 x->setInventory(b);
-            }
+            }*/
         return true;
 }
 
@@ -273,15 +309,39 @@ bool character_frag::triggerEvent(Object *a)
         Player* x = dynamic_cast<Player*>(a);
         vector<Item>::iterator it;
         vector<Item> b = x->getInventory();
-        for(it = b.begin();it->getName() != "character fragment";it++){};
-            if(it == b.end()){
-                Item* tem = this;
-                x->addItem(*tem);
+        if (b.size() == 0) {
+            int num = this->getamount();
+            Item frag = character_frag(num);
+            x->addItem(frag);
+            //Item* tem = this;
+           // x->addItem(*tem);
+            return true;
+        }
+        for (it = b.begin(); it->getName() != "character fragment" && it != b.end(); it++) {
+            if (it + 1 == b.end()&&it->getName()!="character fragment") {
+                int num = this->getamount();
+                Item frag = character_frag(num);
+                x->addItem(frag);
+                return true;
+            }
+            else if (it + 1 == b.end()) {
+                break;
+            }
+        };//have bug!!
+        int am = this->getamount();
+        it->addamount(am);
+        x->setInventory(b);
+           /* if (it + 1 == b.end()) {
+                int num = this->getamount();
+                Item frag = character_frag(num);
+                x->addItem(frag);
+                //Item* tem = this;
+                //x->addItem(*tem);
             }
             else{
                 int am = this->getamount();
                 it->addamount(am);
                 x->setInventory(b);
-            }
+            }*/
         return true;
 }

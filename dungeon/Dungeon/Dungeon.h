@@ -4,15 +4,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
 #include <exception>//find how to use
 #include "Player.h"
 #include "Monster.h"
 #include "NPC.h"
 #include "Room.h"
-#include "Record.h"
+#include "Item.h"
 
 using namespace std;
+
+class Player;
+class Room;
 
 class Dungeon{
 private:
@@ -33,9 +35,7 @@ public:
     /* Deal with player's moveing action */
     void handleMovement();
 
-    void showmap(){
-       
-    }//not yet
+    void showmap();//not yet
 
     /* Deal with player's iteraction with objects in that room */
     // void handleEvent(Object*);
